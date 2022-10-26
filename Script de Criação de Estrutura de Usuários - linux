@@ -1,0 +1,35 @@
+#!/bin/bash
+
+echo "Criando diretórios..."
+mkdir /nomePasta1
+mkdir /nomePasta2
+mkdir /publico
+mkdir /adm
+
+echo "criando grupos de usuários..."
+groupadd nomeGrupo1
+groupadd nomeGrupo2 
+groupadd nomeGrupo3 
+groupadd adm 
+
+echo "criando usuários e definindo o grupo pertencente..."
+useradd convidado1 -m -s /bin/bash -p $(openssl passwd senhaUser) -G nomeGrupo1,nomeGrupo2 
+passwd convidado1 -e #Para definir a senha no primeiro acesso
+
+useradd convidado2 -s /bin/bash -p $(openssl passwd senhaUser) -G nomeGrupo3 
+passwd convidado2 -e
+
+useradd convidado3 -s /bin/bash -p $(openssl passwd senhaUser) -G nomeGrupo2
+passwd convidado3 -e
+
+echo "Especificando as permissões dos diretórios..."
+chown root:adm /nomePasta1
+chown root:nomeGrupo2 /nomePasta2
+chown convidado1:nomeGrupo3 /publico
+
+chmod 770 /adm
+chmod 770 /nomePasta1
+chmod 770 /nomePasta2
+chmod 777 /publico
+
+echo "Fim..."
